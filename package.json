@@ -1,0 +1,37 @@
+{
+  "name": "shop-admin-webserve",
+  "version": "1.0.0",
+  "description": "电商管理后台服务--nodejs,koa,mongobd",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bill-mark/shop-admin-webserve.git"
+  },
+  "keywords": [
+    "koa",
+    "mongodb"
+  ],
+  "author": "dengzixiang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bill-mark/shop-admin-webserve/issues"
+  },
+  "homepage": "https://github.com/bill-mark/shop-admin-webserve#readme",
+  "dependencies": {
+    "jsonwebtoken": "^8.5.1",
+    "koa": "^2.13.1",
+    "koa-body": "^4.2.0",
+    "koa-json-error": "^3.1.2",
+    "koa-jwt": "^4.0.0",
+    "koa-parameter": "^3.0.1",
+    "koa-router": "^10.0.0",
+    "mongoose": "^5.11.18"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
