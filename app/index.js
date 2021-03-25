@@ -35,4 +35,4 @@ app.use(koaBody({
 app.use(parameter(app))
 routing(app)
 
-app.listen(3000,()=>{console.log('koa has start')})
+app.listen(3000,()=>{console.log('shop admin webserver koa has start')})
