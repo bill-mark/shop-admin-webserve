@@ -1,16 +1,15 @@
 const jwt = require('koa-jwt')
 const Router = require('koa-router')
-const router = new Router({prefix:'/commoditytype'})
-const {secret} = require('../config')
-const auth = jwt({secret})
+const router = new Router({ prefix: '/commoditytype' })
+const { secret } = require('../config')
+const auth = jwt({ secret })
 
-const {create} = require('../controllers/commoditytype')
+const { create, delete: del, update, findall } = require('../controllers/commoditytype')
 
 
-router.post('/create',create)
-// router.post('/delete',del)
-// router.post('/update',update)
-// router.get('/findall',findall)
-// router.get('/findone',findone)
+router.post('/create', create)
+router.post('/delete', del)
+router.post('/update', update)
+router.get('/findall', findall)
 
 module.exports = router

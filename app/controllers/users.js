@@ -10,19 +10,18 @@ class UserCtl {
             password: { type: 'string', required: true }
         })
         const { name } = ctx.request.body
-        const repeatedUser = await User.findOne({ name })
-        if (repeatedUser) {
+        const repeated = await User.findOne({ name })
+        if (repeated) {
             ctx.body = {
                 state:-1,
                 message:'已存在'
             }
             return
         }
-        const user = await new User(ctx.request.body).save()
-        console.log(user)
+        const result = await new User(ctx.request.body).save()
         ctx.body = {
             state:0,
-            phone:user.phone,
+            phone:result.phone,
         }
     }
     async login(ctx) {
@@ -62,8 +61,8 @@ class UserCtl {
         ctx.verifyParams({
             id:{type:'string',required:true},
          })
-        const user = await User.findByIdAndRemove(ctx.request.body.id)
-        if(!user){
+        const result = await User.findByIdAndRemove(ctx.request.body.id)
+        if(!result){
             ctx.body = {
                 state:-1,
                 message:'目标不存在'
@@ -92,7 +91,7 @@ class UserCtl {
         ctx.body = {
             state:0,
         }
-     }
+    }
 }
 
 module.exports = new UserCtl()
