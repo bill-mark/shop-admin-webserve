@@ -6,6 +6,8 @@ module.exports = (app)=>{
             return
         }
         const route = require(`./${file}`)
+        //console.log(route)
+        //allowedMethods 支持没有的方法返回405 比如put, 不支持的方法返回501 比如link
         app.use(route.routes()).use(route.allowedMethods())
     })
 }

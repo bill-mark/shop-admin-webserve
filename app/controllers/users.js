@@ -59,7 +59,29 @@ class UserCtl {
             .limit(perPage).skip(page * perPage)
     }
     async delete(ctx){
+        ctx.verifyParams({
+            id:{type:'string',required:true},
+         })
         const user = await User.findByIdAndRemove(ctx.request.body.id)
+        if(!user){
+            ctx.body = {
+                state:-1,
+                message:'目标不存在'
+            }
+            return
+        }
+        ctx.body = {
+            state:0,
+        }
+    }
+    async update(ctx){
+        ctx.verifyParams({
+           name:{type:'string',required:false},
+           password:{type:'string',required:false},
+           phone:{type:'number',required:false},
+        })
+  
+        const user = await User.findByIdAndUpdate(ctx.request.body.id,ctx.request.body)
         if(!user){
             ctx.body = {
                 state:-1,
