@@ -1,22 +1,14 @@
-//品牌
-//商品类别
-const Brand = require('../models/brand')
+const Purchase = require('../models/purchase')
 
-class BrandCtl{
+class PurchaseCtl{
     async create(ctx){
         ctx.verifyParams({
-            name:{type:'string',required:true},
+            intime:{type:'string',required:true},
         })
-        const {name} = ctx.request.body
-        const repeated = await Brand.findOne({name})
-        if (repeated) {
-            ctx.body = {
-                state:-1,
-                message:'已存在'
-            }
-            return
-        }
-        const result = await new Brand(ctx.request.body).save()
+        //mongodb默认存0区时间 要加8小时
+        ctx.request.body.intime =new Date(Date.parse(ctx.request.body.intime)).getTime()+8*60*60*1000
+        
+        const result = await new Purchase(ctx.request.body).save()
         if(result._id){
             ctx.body = {
                 state:0,
@@ -27,7 +19,7 @@ class BrandCtl{
         ctx.verifyParams({
             id:{type:'string',required:true},
          })
-        const result = await Brand.findByIdAndRemove(ctx.request.body.id)
+        const result = await Purchase.findByIdAndRemove(ctx.request.body.id)
         if(!result){
             ctx.body = {
                 state:-1,
@@ -41,11 +33,10 @@ class BrandCtl{
     }
     async update(ctx){
         ctx.verifyParams({
-           name:{type:'string',required:true},
            id:{type:'string',required:true},
         })
   
-        const result = await Brand.findByIdAndUpdate(ctx.request.body.id,ctx.request.body)
+        const result = await Purchase.findByIdAndUpdate(ctx.request.body.id,ctx.request.body)
         if(!result){
             ctx.body = {
                 state:-1,
@@ -63,11 +54,11 @@ class BrandCtl{
         const perPage = Math.max(per_page * 1, 1) //每页多少条
         ctx.body = {
             state:0,
-            data:await Brand
-            .find({ name: new RegExp(ctx.query.q) })  //正则表达式模糊搜索  key-value 精确搜索
+            data:await Purchase
+            .find({ delivery: new RegExp(ctx.query.q) })
             .limit(perPage).skip(page * perPage)
         }
     }
 }
 
-module.exports = new BrandCtl()
+module.exports = new PurchaseCtl()
