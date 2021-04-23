@@ -53,9 +53,12 @@ class UserCtl {
         const { per_page = 10 } = ctx.query
         const page = Math.max(ctx.query.page * 1, 1) - 1 //乘1用来转数字  max保证不能小于1
         const perPage = Math.max(per_page * 1, 1) //每页多少条
-        ctx.body = await User
-            .find({ name: new RegExp(ctx.query.q) })  //正则表达式模糊搜索  key-value 精确搜索
+        ctx.body = {
+            state:0,
+            data:await User
+            .find({ name: new RegExp(ctx.query.q) })  
             .limit(perPage).skip(page * perPage)
+        }
     }
     async delete(ctx){
         ctx.verifyParams({
