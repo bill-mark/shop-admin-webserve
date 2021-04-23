@@ -4,7 +4,7 @@ const router = new Router({prefix:'/users'})
 const {secret} = require('../config')
 const auth = jwt({secret})
 
-const{create,login,findall,delete:del,update} = require('../controllers/users')
+const{create,login,findall,delete:del,update,getdetail} = require('../controllers/users')
 
 //注册
 router.post('/create', create)
@@ -16,5 +16,7 @@ router.get('/findall',findall)
 router.post('/delete',del)
 //更新用户
 router.post('/update',update)
+//查看单一详情
+router.get('/getdetail',getdetail)
 
 module.exports = router

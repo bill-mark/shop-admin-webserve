@@ -8,7 +8,7 @@ const userSchema = new Schema({
     name:{type:String,required:false},
     phone:{type:Number,required:true},
     password:{type:String,required:true,select:false},
-    role:{type:String,required:false},//角色
+    //role:{type:String,required:false},//角色
     jointime:{type:Date,required:false},//入职时间
 },{timestamps:true})
 

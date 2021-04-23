@@ -4,13 +4,13 @@ const router = new Router({prefix:'/commmodity'})
 const {secret} = require('../config')
 const auth = jwt({secret})
 
-const {create} = require('../controllers/commodity')
+const {create,delete:del,update,findall,getdetail} = require('../controllers/commodity')
 
 
 router.post('/create',create)
-// router.post('/delete',del)
-// router.post('/update',update)
-// router.get('/findall',findall)
-// router.get('/findone',findone)
+router.post('/delete',del)
+router.post('/update',update)
+router.get('/findall',findall)
+router.get('/getdetail',getdetail)
 
 module.exports = router

@@ -92,6 +92,18 @@ class UserCtl {
             state:0,
         }
     }
+    async getdetail(ctx){
+        //selectFields 选中要返回的属性
+        const selectFields = "jointime name phone"
+        const user = await User.findById(ctx.query.id).select(selectFields)
+        if(!user){
+           ctx.throw(404,'用户不存在')
+        }
+        ctx.body = {
+            state:0,
+            data:user
+        }
+    }
 }
 
 module.exports = new UserCtl()

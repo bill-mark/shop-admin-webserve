@@ -1,14 +1,14 @@
-const Commodity = require('../models/commodity')
-//商品
-class CommodityCtl{
+//品牌
+//商品类别
+const Brand = require('../models/brand')
+
+class BrandCtl{
     async create(ctx){
         ctx.verifyParams({
             name:{type:'string',required:true},
-            brand:{type:'string',required:true},
-            commoditytype:{type:'string',required:true},
         })
         const {name} = ctx.request.body
-        const repeated = await Commodity.findOne({name})
+        const repeated = await Brand.findOne({name})
         if (repeated) {
             ctx.body = {
                 state:-1,
@@ -16,7 +16,7 @@ class CommodityCtl{
             }
             return
         }
-        const result = await new Commodity(ctx.request.body).save()
+        const result = await new Brand(ctx.request.body).save()
         if(result._id){
             ctx.body = {
                 state:0,
@@ -27,7 +27,7 @@ class CommodityCtl{
         ctx.verifyParams({
             id:{type:'string',required:true},
          })
-        const result = await Commodity.findByIdAndRemove(ctx.request.body.id)
+        const result = await Brand.findByIdAndRemove(ctx.request.body.id)
         if(!result){
             ctx.body = {
                 state:-1,
@@ -41,11 +41,11 @@ class CommodityCtl{
     }
     async update(ctx){
         ctx.verifyParams({
-           name:{type:'string',required:false},
+           name:{type:'string',required:true},
            id:{type:'string',required:true},
         })
   
-        const result = await Commodity.findByIdAndUpdate(ctx.request.body.id,ctx.request.body)
+        const result = await Brand.findByIdAndUpdate(ctx.request.body.id,ctx.request.body)
         if(!result){
             ctx.body = {
                 state:-1,
@@ -61,22 +61,10 @@ class CommodityCtl{
         const { per_page = 10 } = ctx.query
         const page = Math.max(ctx.query.page * 1, 1) - 1 //乘1用来转数字  max保证不能小于1
         const perPage = Math.max(per_page * 1, 1) //每页多少条
-        ctx.body = await Commodity
-            .find({ name: new RegExp(ctx.query.q) }).populate('brand commoditytype')
+        ctx.body = await Brand
+            .find({ name: new RegExp(ctx.query.q) })  //正则表达式模糊搜索  key-value 精确搜索
             .limit(perPage).skip(page * perPage)
     }
-    async getdetail(ctx){
-    
-        const result = await Commodity.findById(ctx.query.id).populate('brand commoditytype')
-        if(!result){
-           ctx.throw(404,'用户不存在')
-        }
-        ctx.body = {
-            state:0,
-            data:result
-        }
-    }
-
 }
 
-module.exports = new CommodityCtl()
+module.exports = new BrandCtl()
