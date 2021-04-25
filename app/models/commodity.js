@@ -16,6 +16,7 @@ const commoditySchema = new Schema({
         ref:'Commoditytype',
         select:true
     },//商品类别
+    unit:{type:Number,required:true},//单位 1箱,2个,3件
     total:{type:Number,default:0,required:false},//总数
     costprice:{type:Number,default:0},//进货总价
 })

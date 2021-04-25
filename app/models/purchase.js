@@ -10,10 +10,9 @@ const purchaseSchema = new Schema({
     goodslist:{
        type:[
            {
-               commodity:{type:Schema.Types.ObjectId,ref:'commodity'},
+               commodity:{type:Schema.Types.ObjectId,ref:'Commodity'},
                count:{type:Number,required:true},//数量     
-               unit:{type:String,required:true},//单位
-               price:{type:Number,required:true},//单价
+               price:{type:Number,required:true},//进货单价
            }
        ],
        default:[]
