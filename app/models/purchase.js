@@ -11,11 +11,12 @@ const purchaseSchema = new Schema({
        type:[
            {
                commodity:{type:Schema.Types.ObjectId,ref:'commodity'},
-               count:{type:Number,required:true},//数量
+               count:{type:Number,required:true},//数量     
                unit:{type:String,required:true},//单位
                price:{type:Number,required:true},//单价
            }
-       ]
+       ],
+       default:[]
     },
     allmoney:{type:Number},//本次进货总价
     remark:{type:String},//备注

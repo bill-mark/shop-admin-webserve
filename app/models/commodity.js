@@ -16,8 +16,8 @@ const commoditySchema = new Schema({
         ref:'Commoditytype',
         select:true
     },//商品类别
-    total:{type:Number,required:false},//总数
-    costprice:{type:Number},//进货总价
+    total:{type:Number,default:0,required:false},//总数
+    costprice:{type:Number,default:0},//进货总价
 })
 
 module.exports = model('Commodity',commoditySchema)
