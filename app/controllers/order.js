@@ -1,16 +1,22 @@
-//进货单
-const Purchase = require('../models/purchase')
+//订单
+const Order = require('../models/order')
 const Commodity = require('../models/commodity')
 
-class PurchaseCtl {
+class OrderCtl {
     async create(ctx) {
         ctx.verifyParams({
             intime: { type: 'string', required: true },
         })
         //mongodb默认存0区时间 要加8小时
-        ctx.request.body.intime = new Date(Date.parse(ctx.request.body.intime)).getTime() + 8 * 60 * 60 * 1000
+        //ctx.request.body.intime = new Date(Date.parse(ctx.request.body.intime)).getTime() + 8 * 60 * 60 * 1000
 
-        const result = await new Purchase(ctx.request.body).save()
+        if(ctx.request.body.ordertime){
+            ctx.request.body.ordertime = new Date(Date.parse(ctx.request.body.ordertime)).getTime() + 8 * 60 * 60 * 1000
+        }else{
+            ctx.request.body.ordertime = new Date().getTime() + 8 * 60 * 60 * 1000
+        }
+
+        const result = await new Order(ctx.request.body).save()
 
         //console.log(result)
 
@@ -18,9 +24,10 @@ class PurchaseCtl {
             if (result.goodslist.length > 0) {
                 for(const item of result.goodslist){
                     let c_1 = await Commodity.findById(item.commodity)
+                    let c_2 = c_1.costprice/c_1.total  //进货平均单价
                     let c_3 = {
-                        total: c_1.total + item.count,
-                        costprice:c_1.costprice+item.count*item.price
+                        total: c_1.total - item.count,
+                        costprice:c_1.costprice-item.count*c_2
                     }
                     await Commodity.findByIdAndUpdate(item.commodity, c_3)
                 }
@@ -35,7 +42,7 @@ class PurchaseCtl {
         ctx.verifyParams({
             id: { type: 'string', required: true },
         })
-        const result = await Purchase.findByIdAndRemove(ctx.request.body.id)
+        const result = await Order.findByIdAndRemove(ctx.request.body.id)
         if (!result) {
             ctx.body = {
                 state: -1,
@@ -52,7 +59,7 @@ class PurchaseCtl {
             id: { type: 'string', required: true },
         })
 
-        const result = await Purchase.findByIdAndUpdate(ctx.request.body.id, ctx.request.body)
+        const result = await Order.findByIdAndUpdate(ctx.request.body.id, ctx.request.body)
         if (!result) {
             ctx.body = {
                 state: -1,
@@ -70,11 +77,11 @@ class PurchaseCtl {
         const perPage = Math.max(per_page * 1, 1) //每页多少条
         ctx.body = {
             state: 0,
-            data: await Purchase
+            data: await Order
                 .find({ delivery: new RegExp(ctx.query.q) })
                 .limit(perPage).skip(page * perPage)
         }
     }
 }
 
-module.exports = new PurchaseCtl()
+module.exports = new OrderCtl()
