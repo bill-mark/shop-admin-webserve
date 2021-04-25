@@ -19,6 +19,6 @@ const commoditySchema = new Schema({
     unit:{type:Number,required:true},//单位 1箱,2个,3件
     total:{type:Number,default:0,required:false},//总数
     costprice:{type:Number,default:0},//进货总价
-})
+},{collection:'commodity'})
 
 module.exports = model('Commodity',commoditySchema)

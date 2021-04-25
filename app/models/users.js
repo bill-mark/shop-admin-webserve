@@ -10,6 +10,6 @@ const userSchema = new Schema({
     password:{type:String,required:true,select:false},
     level:{type:Number,required:true},//级别
     jointime:{type:Date,required:false},//入职时间
-},{timestamps:true})
+},{timestamps:true,collection:'users'})
 
 module.exports = model('User',userSchema)

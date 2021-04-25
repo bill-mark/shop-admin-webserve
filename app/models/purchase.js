@@ -19,6 +19,6 @@ const purchaseSchema = new Schema({
     },
     allmoney:{type:Number},//本次进货总价
     remark:{type:String},//备注
-})
+},{collection:'purchase'})
 
 module.exports = model('Purchase',purchaseSchema)

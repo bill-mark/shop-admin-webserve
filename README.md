@@ -15,6 +15,10 @@ db.createUser(
      }
 )
 
+创建表的时候要传入第二个参数指定表名,
+new Schema({ name: String }, { collection: 'actor' });
+不然mongoose会加复数
+
 db.addUser("root","DER342434ggbhmkl667")
 
 stream {
