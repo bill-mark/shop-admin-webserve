@@ -2,14 +2,12 @@
 const Order = require('../models/order')
 const Commodity = require('../models/commodity')
 
+const ecompany = require('../models/ecompany')
+
 class OrderCtl {
     async create(ctx) {
-        ctx.verifyParams({
-            intime: { type: 'string', required: true },
-        })
         //mongodb默认存0区时间 要加8小时
-        //ctx.request.body.intime = new Date(Date.parse(ctx.request.body.intime)).getTime() + 8 * 60 * 60 * 1000
-
+       
         if(ctx.request.body.ordertime){
             ctx.request.body.ordertime = new Date(Date.parse(ctx.request.body.ordertime)).getTime() + 8 * 60 * 60 * 1000
         }else{
@@ -76,7 +74,10 @@ class OrderCtl {
         const page = Math.max(ctx.query.page * 1, 1) - 1 //乘1用来转数字  max保证不能小于1
         const perPage = Math.max(per_page * 1, 1) //每页多少条
         let c_1 = await Order
-        .find( )
+        .find()
+        .populate({path:'customer'})
+        .populate({path:'ecompany',model:ecompany})
+        .populate({path:'goodslist',populate:{path:'commodity',model:Commodity}})
         .limit(perPage).skip(page * perPage)
         
         ctx.body = {

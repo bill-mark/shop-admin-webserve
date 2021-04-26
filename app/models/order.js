@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const { Schema, model } = mongoose
 
 const orderSchema = new Schema({
-    __v: { type: Number, select: true },
+    __v: { type: Number, select: false },
     state: { type: Number, select: true },//订单状态 1待付款,2待发货,3已发货,4已付款,5有尾款,6已收货,7其他
     sum: { type: Number },//金额
     ordertime: { type: Date, required: false },//下单时间
@@ -12,7 +12,7 @@ const orderSchema = new Schema({
     goodslist: {
         type: [
             {
-                commodity:{type:Schema.Types.ObjectId,ref:'Commodity'},
+                commodity:{type:Schema.Types.ObjectId,ref:'commodity'},
                 count: { type: Number,required:true},//数量
                 price:{type:Number,required:true},//卖出单价
             } 
@@ -21,12 +21,12 @@ const orderSchema = new Schema({
     },//商品列表
     customer: {
         type: Schema.Types.ObjectId,
-         ref: 'Customer',
+        ref: 'customer',
         select: true
-    },//外键-客户表
-    express: {
+    },//客户表
+    ecompany: {
         type: Schema.Types.ObjectId,
-        ref: 'Ecompany',
+        ref: 'ecompany',
         required: false
     },//快递公司
     postid:{
