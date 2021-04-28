@@ -7,7 +7,6 @@ const ecompany = require('../models/ecompany')
 class OrderCtl {
     async create(ctx) {
         //mongodb默认存0区时间 要加8小时
-       
         if(ctx.request.body.ordertime){
             ctx.request.body.ordertime = new Date(Date.parse(ctx.request.body.ordertime)).getTime() + 8 * 60 * 60 * 1000
         }else{
