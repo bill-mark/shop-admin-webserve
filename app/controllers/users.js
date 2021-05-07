@@ -26,6 +26,7 @@ class UserCtl {
     }
     async login(ctx) {
         //console.log('login')
+        //console.log(ctx.request.body)
 
         ctx.verifyParams({  // 使用koa-parameter对参数进行校验
             name: { type: 'string', required: true },
