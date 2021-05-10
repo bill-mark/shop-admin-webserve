@@ -70,6 +70,7 @@ class PurchaseCtl {
         const perPage = Math.max(per_page * 1, 1) //每页多少条
         ctx.body = {
             state: 0,
+            count:await Purchase.count(),
             data: await Purchase
                 .find({ delivery: new RegExp(ctx.query.q) })
                 .limit(perPage).skip(page * perPage)

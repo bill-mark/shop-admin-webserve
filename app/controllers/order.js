@@ -81,6 +81,7 @@ class OrderCtl {
         
         ctx.body = {
             state: 0,
+            count:await Order.count(),
             data: c_1
         }
     }

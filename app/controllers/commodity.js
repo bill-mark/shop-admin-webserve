@@ -63,6 +63,7 @@ class CommodityCtl{
         const perPage = Math.max(per_page * 1, 1) //每页多少条
         ctx.body = {
             state:0,
+            count:await Commodity.count(),
             data:await Commodity
             .find({ name: new RegExp(ctx.query.q) }).populate('brand commoditytype')
             .limit(perPage).skip(page * perPage)

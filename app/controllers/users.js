@@ -56,6 +56,7 @@ class UserCtl {
         const perPage = Math.max(per_page * 1, 1) //每页多少条
         ctx.body = {
             state:0,
+            count:await User.count(),
             data:await User
             .find({ name: new RegExp(ctx.query.q) })  
             .limit(perPage).skip(page * perPage)

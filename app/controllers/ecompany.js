@@ -63,6 +63,7 @@ class EcompanyCtl{
         const perPage = Math.max(per_page * 1, 1) //每页多少条
         ctx.body = {
             state:0,
+            count:await Ecompany.count(),
             data:await Ecompany
             .find({ name: new RegExp(ctx.query.q) })  //正则表达式模糊搜索  key-value 精确搜索
             .limit(perPage).skip(page * perPage)
