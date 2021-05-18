@@ -10,10 +10,22 @@ class PurchaseCtl {
         //mongodb默认存0区时间 要加8小时
         ctx.request.body.intime = new Date(Date.parse(ctx.request.body.intime)).getTime() + 8 * 60 * 60 * 1000
 
+        //计算进货总价
+        let c_1 = 0
+        if(ctx.request.body.goodslist && ctx.request.body.goodslist.length > 0){
+            console.log('-------------888')
+             ctx.request.body.goodslist.forEach( (item)=>{
+                 console.log(item.coun,item.price)
+               c_1 +=  item.count * item.price
+            } )
+        }
+        ctx.request.body.allmoney = c_1
+
+
         const result = await new Purchase(ctx.request.body).save()
 
-        //console.log(result)
-
+       
+        //更新商品总数等
         if (result._id) {
             if (result.goodslist.length > 0) {
                 for(const item of result.goodslist){
@@ -72,8 +84,30 @@ class PurchaseCtl {
             state: 0,
             count:await Purchase.count(),
             data: await Purchase
-                .find({ delivery: new RegExp(ctx.query.q) })
+                .find()
+                .populate({path:'goodslist',populate:{path:'commodity',populate:{path:'brand commoditytype'}}}  )
                 .limit(perPage).skip(page * perPage)
+        }
+    }
+    async getdetail(ctx){
+        const result = await Purchase.findById(ctx.query.id)
+        .populate({path:'goodslist',populate:{path:'commodity',populate:{path:'brand commoditytype'}}}  )
+        if(!result){
+           ctx.throw(404,'不存在')
+        }
+        ctx.body = {
+            state:0,
+            data:result
+        }
+    }
+    async getdetail_no_populate(ctx){
+        const result = await Purchase.findById(ctx.query.id)
+        if(!result){
+           ctx.throw(404,'不存在')
+        }
+        ctx.body = {
+            state:0,
+            data:result
         }
     }
 }

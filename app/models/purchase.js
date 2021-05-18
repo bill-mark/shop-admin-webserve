@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const {Schema,model} = mongoose
 
 const purchaseSchema = new Schema({
-    __v:{type:Number,select:false},
+    __v:{type:Number,select:false},  
     intime:{type:Date,required:false},//进货时间
     delivery:{type:String,required:false},//发货方
     goodslist:{

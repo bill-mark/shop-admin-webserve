@@ -8,7 +8,7 @@ const customerSchema = new Schema({
     name:{type:String,required:true},
     phone:{type:Number,required:false},
     address:{type:String,required:false},
-    remark:{type:String,required:false},//备注
+    remark:{type:String,default:'',required:false},//备注
 },{collection:'customer'})
 
 module.exports = model('customer',customerSchema)

@@ -5,9 +5,10 @@ const { Schema, model } = mongoose
 
 const orderSchema = new Schema({
     __v: { type: Number, select: false },
-    state: { type: Number, select: true },//订单状态 1待付款,2待发货,3已发货,4已付款,5有尾款,6已收货,7其他
+    state: { type: Number, select: true },//订单状态 1待付款,2待发货,3已发货,4已付款,5有尾款,6已收货,7完结,8进入售后,9其他
     sum: { type: Number },//金额
     ordertime: { type: Date, required: false },//下单时间
+    sendtime: { type: Date, required: false },//发货时间
     address: { type: String, required: false },//收货地址
     goodslist: {
         type: [

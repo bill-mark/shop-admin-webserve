@@ -1,7 +1,6 @@
 //订单
 const Order = require('../models/order')
 const Commodity = require('../models/commodity')
-
 const ecompany = require('../models/ecompany')
 
 class OrderCtl {
@@ -83,6 +82,34 @@ class OrderCtl {
             state: 0,
             count:await Order.count(),
             data: c_1
+        }
+    }
+
+    async getdetail(ctx){
+        const result = await Order.findById(ctx.query.id)
+        .populate({path:'customer'})
+        .populate({path:'ecompany',model:ecompany})
+        .populate({path:'goodslist',populate:{path:'commodity',model:Commodity,populate:{path:'brand commoditytype'} }}  )
+        if(!result){
+           ctx.throw(404,'不存在')
+        }
+        ctx.body = {
+            state:0,
+            data:result
+        }
+    }
+
+    //非多层填充
+    async getdetail_no_populate(ctx){
+        const result = await Order.findById(ctx.query.id)
+        .populate({path:'customer'})
+        .populate({path:'ecompany',model:ecompany})
+        if(!result){
+           ctx.throw(404,'不存在')
+        }
+        ctx.body = {
+            state:0,
+            data:result
         }
     }
 }
