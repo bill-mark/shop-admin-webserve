@@ -44,6 +44,7 @@ class CommodityCtl{
            name:{type:'string',required:false},
            id:{type:'string',required:true},
         })
+
   
         const result = await Commodity.findByIdAndUpdate(ctx.request.body.id,ctx.request.body)
         if(!result){

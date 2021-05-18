@@ -14,8 +14,8 @@ class OrderCtl {
 
         const result = await new Order(ctx.request.body).save()
 
-        //console.log(result)
-
+       
+        //更新商品总数等
         if (result._id) {
             if (result.goodslist.length > 0) {
                 for(const item of result.goodslist){
@@ -54,6 +54,34 @@ class OrderCtl {
         ctx.verifyParams({
             id: { type: 'string', required: true },
         })
+
+        // console.log(ctx.request.body)
+        //更新对应商品总数和总价
+        let d_1 = await Order.findById(ctx.query.id)
+        console.log(d_1)
+
+        if (ctx.request.body.goodslist && ctx.request.body.goodslist.length > 0) {
+            for(const item of ctx.request.body.goodslist){
+                let c_1 = await Commodity.findById(item.commodity)
+
+                let old_count = 0
+                let f_1 = d_1.goodslist.findIndex(item_f =>{
+                    return item_f.commodity == item.commodity
+                })
+                if(f_1 > -1){
+                    old_count=d_1.goodslist[f_1].count
+                }
+
+                let c_2 = c_1.costprice/c_1.total  //进货平均单价
+                   
+
+                let c_3 = {
+                    total: c_1.total - item.count + old_count,
+                    costprice:c_1.costprice-item.count*c_2 + old_count*c_2
+                }
+                await Commodity.findByIdAndUpdate(item.commodity, c_3)
+            }
+        }
 
         const result = await Order.findByIdAndUpdate(ctx.request.body.id, ctx.request.body)
         if (!result) {

@@ -13,7 +13,7 @@ class PurchaseCtl {
         //计算进货总价
         let c_1 = 0
         if(ctx.request.body.goodslist && ctx.request.body.goodslist.length > 0){
-            console.log('-------------888')
+            
              ctx.request.body.goodslist.forEach( (item)=>{
                  console.log(item.coun,item.price)
                c_1 +=  item.count * item.price
@@ -64,6 +64,35 @@ class PurchaseCtl {
             id: { type: 'string', required: true },
         })
 
+        // console.log(ctx.request.body)
+        //更新对应商品总数和总价
+        let d_1 = await Purchase.findById(ctx.query.id)
+
+        if (ctx.request.body.goodslist && ctx.request.body.goodslist.length > 0) {
+            for(const item of ctx.request.body.goodslist){
+                let c_1 = await Commodity.findById(item.commodity)
+
+                let old_count = 0
+                let old_price = 0
+                let f_1 = d_1.goodslist.findIndex(item_f =>{
+                    return item_f.commodity == item.commodity
+                })
+                if(f_1 > -1){
+                    old_count=d_1.goodslist[f_1].count
+                    old_price=d_1.goodslist[f_1].price
+                }
+
+                let c_3 = {
+                    total: c_1.total + item.count - old_count,
+                    costprice:c_1.costprice+item.count*item.price-old_count*old_price
+                }
+                await Commodity.findByIdAndUpdate(item.commodity, c_3)
+            }
+        }
+
+
+
+
         const result = await Purchase.findByIdAndUpdate(ctx.request.body.id, ctx.request.body)
         if (!result) {
             ctx.body = {
@@ -72,6 +101,10 @@ class PurchaseCtl {
             }
             return
         }
+
+        
+
+
         ctx.body = {
             state: 0,
         }
