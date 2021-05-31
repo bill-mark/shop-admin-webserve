@@ -1,5 +1,6 @@
 //商品类别
 const Commoditytype = require('../models/commoditytype')
+const mongoose = require('mongoose')
 
 class CommoditytypeCtl{
     async create(ctx){
@@ -70,6 +71,32 @@ class CommoditytypeCtl{
             .limit(perPage).skip(page * perPage)
         }
        
+    }
+
+    async getcommoditybysame(ctx){
+    
+        const result = await Commoditytype.aggregate([
+            {
+                $match:{_id:mongoose.Types.ObjectId(ctx.query.id) }
+            },
+            {
+                $lookup:{
+                    from:"commodity",
+                    localField:"_id",
+                    foreignField:"commoditytype",
+                    as:"commoditylist"
+                }
+            }
+            
+        ])
+
+        if(!result){
+           ctx.throw(404,'品牌不存在')
+        }
+        ctx.body = {
+            state:0,
+            data:result
+        }
     }
 }
 
