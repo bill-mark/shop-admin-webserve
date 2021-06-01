@@ -4,12 +4,13 @@ const router = new Router({ prefix: '/brand' })
 const { secret } = require('../config')
 const auth = jwt({ secret })
 
-const { create, delete: del, update, findall } = require('../controllers/brand')
+const { create, delete: del, update, findall,getbrandbysame } = require('../controllers/brand')
 
 
 router.post('/create', create)
 router.post('/delete', del)
 router.post('/update', update)
 router.get('/findall', findall)
+router.get('/getbrandbysame', getbrandbysame)
 
 module.exports = router

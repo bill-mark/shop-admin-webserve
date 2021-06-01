@@ -1,5 +1,6 @@
 //品牌
 const Brand = require('../models/brand')
+const mongoose = require('mongoose')
 
 class BrandCtl{
     async create(ctx){
@@ -66,6 +67,32 @@ class BrandCtl{
             data:await Brand
             .find({ name: new RegExp(ctx.query.q) })  //正则表达式模糊搜索  key-value 精确搜索
             .limit(perPage).skip(page * perPage)
+        }
+    }
+
+    async getbrandbysame(ctx){
+    
+        const result = await Brand.aggregate([
+            {
+                $match:{_id:mongoose.Types.ObjectId(ctx.query.id) }
+            },
+            {
+                $lookup:{
+                    from:"brand",
+                    localField:"_id",
+                    foreignField:"commoditytype",
+                    as:"brandlist"
+                }
+            }
+            
+        ])
+
+        if(!result){
+           ctx.throw(404,'品牌不存在')
+        }
+        ctx.body = {
+            state:0,
+            data:result
         }
     }
 }
