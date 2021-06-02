@@ -1,6 +1,7 @@
 //品牌
 const Brand = require('../models/brand')
 const mongoose = require('mongoose')
+const Commodity = require('../models/commodity')
 
 class BrandCtl{
     async create(ctx){
@@ -71,17 +72,35 @@ class BrandCtl{
     }
 
     async getbrandbysame(ctx){
+        const { per_page = 10 } = ctx.query
+        const page = Math.max(ctx.query.page * 1, 1) - 1 //乘1用来转数字  max保证不能小于1
+        const perPage = Math.max(per_page * 1, 1) //每页多少条
     
-        const result = await Brand.aggregate([
+        const result = await Commodity.aggregate([
             {
-                $match:{_id:mongoose.Types.ObjectId(ctx.query.id) }
+                $match:{brand:mongoose.Types.ObjectId(ctx.query.id) }
             },
+            {$skip: page },
+            {$limit: perPage}, 
             {
                 $lookup:{
-                    from:"brand",
-                    localField:"_id",
-                    foreignField:"commoditytype",
-                    as:"brandlist"
+                    from: 'commoditytype',
+                    localField: 'commoditytype',
+                    foreignField: '_id',
+                    as: 'commoditytypelist'
+                }
+            }
+            
+        ])
+
+        const count_result = await Commodity.aggregate([
+            {
+                $match:{brand:mongoose.Types.ObjectId(ctx.query.id) }
+            },
+            {
+                $group:{
+                    _id:"$brand",
+                    count:{$sum:1}
                 }
             }
             
@@ -92,6 +111,7 @@ class BrandCtl{
         }
         ctx.body = {
             state:0,
+            count:count_result,
             data:result
         }
     }

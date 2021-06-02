@@ -82,7 +82,27 @@ class CommoditytypeCtl{
                 $match:{commoditytype:mongoose.Types.ObjectId(ctx.query.id) }
             },
             {$skip: page },
-            {$limit: perPage},
+            {$limit: perPage}, 
+            {
+                $lookup:{
+                    from: 'brand',
+                    localField: 'brand',
+                    foreignField: '_id',
+                    as: 'brandlist'
+                }
+            }   
+        ])
+
+        const count_result = await Commodity.aggregate([
+            {
+                $match:{commoditytype:mongoose.Types.ObjectId(ctx.query.id) }
+            },
+            {
+                $group:{
+                    _id:"$commoditytype",
+                    count:{$sum:1}
+                }
+            }
             
         ])
 
@@ -91,9 +111,12 @@ class CommoditytypeCtl{
         }
         ctx.body = {
             state:0,
+            count:count_result,
             data:result
         }
     }
+
+   
 }
 
 module.exports = new CommoditytypeCtl()
