@@ -80,6 +80,10 @@ class CommodityCtl{
             data:result
         }
     }
+
+    
+
+
 }
 
 module.exports = new CommodityCtl()
